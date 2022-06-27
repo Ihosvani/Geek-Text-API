@@ -20,9 +20,10 @@ from books import views
 urlpatterns = [
     path('', views.welcomePage),
     path('admin/', admin.site.urls),
-    path('books/', views.getBooks),
+    path('books', views.getBooks),
     # path('books/<int:ISBN>', views.bookISBN ),
-    path('authors/', views.getAuthors),
+    path('authors', views.getAuthors),
     path('authors/<author>', views.booksByAuthor),
-    path('books/ratings', views.getRateBook)
+    path('books/rateBook', views.rateBook),
+    path('books/commentBook', views.commentBook)
 ]

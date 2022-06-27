@@ -22,6 +22,7 @@ def getBooks(request):
         books_serializer = BooksSerializers(books, many = True)
         return JsonResponse(books_serializer.data, safe= False)
     elif request.method == 'POST':
+        print(request.data)
         books_serializer = BooksSerializers(data = request.data)
         if books_serializer.is_valid():
             return Response(books_serializer.data, status = status.HTTP_201_CREATED)
@@ -34,6 +35,7 @@ def getAuthors(request):
         authors_serializer = AuthorsSerializers(authors, many = True)
         return JsonResponse(authors_serializer.data, safe= False)
     if request.method == 'POST':
+        print(request.data)
         authors_serializer = AuthorsSerializers(data = request.data)
         if authors_serializer.is_valid():
             authors_serializer.save()
