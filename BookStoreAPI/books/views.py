@@ -25,6 +25,7 @@ def getBooks(request):
         print(request.data)
         books_serializer = BooksSerializers(data = request.data)
         if books_serializer.is_valid():
+            books_serializer.save()
             return Response(books_serializer.data, status = status.HTTP_201_CREATED)
         
 @api_view(['GET'])     
