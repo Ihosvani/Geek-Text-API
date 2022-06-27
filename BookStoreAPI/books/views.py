@@ -27,6 +27,17 @@ def getBooks(request):
         if books_serializer.is_valid():
             return Response(books_serializer.data, status = status.HTTP_201_CREATED)
         
+@api_view(['GET'])     
+def bookISBN(request, ISBN):
+    try:
+        book = Books.objects.get(pk=ISBN)
+    except Books.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        books_serializer = BooksSerializers(book)
+        return Response(books_serializer.data)
+        
     
 @api_view(['GET', 'POST'])
 def getAuthors(request):
