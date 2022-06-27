@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Create your models here.
 class Books(models.Model):
@@ -17,6 +18,23 @@ class Books(models.Model):
     
     
     
+class Comments(models.Model):
+    ISBN = models.CharField(primary_key=True, max_length=13)
+    bookComment = models.TextField()
+    commentDate = models.DateField(auto_now_add=True, blank=True)
+    userName = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.ISBN
+
+class Ratings(models.Model):
+    ISBN = models.CharField(primary_key=True, max_length=13)
+    rating = models.CharField(max_length=1)
+    ratingDate = models.DateField(auto_now_add=True, blank=True)
+    userName = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.ISBN
 
 class Authors(models.Model):
     id = models.AutoField(primary_key=True)

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Books, Authors
+from .models import Books, Authors, Comments, Ratings
 
 class BooksSerializers(serializers.ModelSerializer):
     class Meta:
@@ -10,3 +10,15 @@ class AuthorsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Authors
         fields = ('id', 'authorFirstName', 'authorLastName', 'authorBiography', 'publisher')
+
+class CommentsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Comments
+        fields = ('ISBN', 'bookComment', 'commentDate', 'userName')
+
+class RatingsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Ratings
+        fields = ('ISBN', 'rating', 'ratingDate', 'userName')
+
+        

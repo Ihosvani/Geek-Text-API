@@ -2,12 +2,13 @@ import imp
 from pickle import FRAME
 from xmlrpc.client import ResponseError
 from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 
-from .models import Books, Authors
-from .serializers import BooksSerializers, AuthorsSerializers
+from .models import Books, Authors, Comments, Ratings
+from .serializers import BooksSerializers, AuthorsSerializers, CommentsSerializers, RatingsSerializers
 
 # Create your views here.
 def welcomePage(request):
@@ -49,3 +50,43 @@ def booksByAuthor(request, author):
     if request.method == 'GET':
         books_serializer = BooksSerializers(books)
         return Response(books_serializer.data)
+
+@api_view(['GET'])
+def getRateBook(request):
+
+    if request.method == 'GET':
+        book_ISBN = JSONParser().parse(request)
+        ratings_book = Ratings.objects.all().filter(ISBN = book_ISBN['ISBN'])
+        rating_serializer = RatingsSerializers(data=ratings_book, many=True)
+        return JsonResponse(JSONParser().parse(rating_serializer))
+
+@api_view(['GET'])
+def ge(request):
+
+    if request.method == 'GET':
+        book_ISBN = JSONParser().parse(request)
+        ratings_book = Ratings.objects.filter(ISBN = book_ISBN)
+        rating_serializer = RatingsSerializers(data=ratings_book)
+        return JsonResponse(JSONParser().parse(rating_serializer))
+
+@api_view(['POST'])
+def rateBook(request):
+
+    if request.method == 'POST':
+        rating_data = JSONParser().parse(request)
+        rating_serializer = RatingsSerializers(data=rating_data)
+
+        if rating_serializer.is_valid():
+            rating_serializer.save()
+            return JsonResponse('Rating addes succesfully')
+
+@api_view(['POST'])
+def commentBook(request):
+    
+    if request.method == 'POST':
+        comment_data = JSONParser().parse(request)
+        comment_serializer = CommentsSerializers(data=comment_data)
+
+        if comment_serializer.is_valid():
+            comment_serializer.save()
+            return JsonResponse('Rating addes succesfully')
