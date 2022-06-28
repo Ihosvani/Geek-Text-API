@@ -19,11 +19,12 @@ from books import views
 
 urlpatterns = [
     path('', views.welcomePage),
-    path('admin/', admin.site.urls),
-    path('books', views.getBooks),
-    # path('books/<int:ISBN>', views.bookISBN ),
-    path('authors', views.getAuthors),
-    path('authors/<author>', views.booksByAuthor),
+    path('books/', views.getBooks),
+    path('admin/books/', views.createBook),
+    path('books/<int:ISBN>', views.bookISBN ),
+    path('authors/', views.getAuthors),
+    path('admin/authors/', views.createAuthor),
+    path('authors/<str:author>', views.booksByAuthor),
     path('books/rateBook', views.rateBook),
     path('books/commentBook', views.commentBook)
 ]
