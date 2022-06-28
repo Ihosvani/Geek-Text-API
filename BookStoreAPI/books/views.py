@@ -15,14 +15,16 @@ def welcomePage(request):
     if request.method == 'GET':
         return JsonResponse('Welcome to Group 10\'s bookstore API!', safe = False)
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def getBooks(request):
     if request.method == 'GET':
         books = Books.objects.all()
         books_serializer = BooksSerializers(books, many = True)
         return JsonResponse(books_serializer.data, safe= False)
-    elif request.method == 'POST':
-        print(request.data)
+        
+@api_view(['POST'])
+def createBook(request):
+    if request.method == 'POST':
         books_serializer = BooksSerializers(data = request.data)
         if books_serializer.is_valid():
             books_serializer.save()
@@ -40,14 +42,17 @@ def bookISBN(request, ISBN):
         return Response(books_serializer.data)
         
     
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def getAuthors(request):
     if request.method == 'GET':
         authors = Authors.objects.all()
         authors_serializer = AuthorsSerializers(authors, many = True)
         return JsonResponse(authors_serializer.data, safe= False)
+    
+        
+@api_view(['POST'])
+def createAuthor(request):
     if request.method == 'POST':
-        print(request.data)
         authors_serializer = AuthorsSerializers(data = request.data)
         if authors_serializer.is_valid():
             authors_serializer.save()
