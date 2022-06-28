@@ -4,8 +4,8 @@ from random import randint
 NUMBER_OF_ENTRIES = 1000
 
 
-urlCreateBooks = 'http://localhost:8000/books'
-urlCreateAuthors = 'http://localhost:8000/authors'
+urlCreateBooks = 'http://localhost:8000/admin/books/'
+urlCreateAuthors = 'http://localhost:8000/admin/authors/'
 urlCreateComment = 'http://localhost:8000/books/commentBook'
 urlCreateRatings = 'http://localhost:8000/books/rateBook'
 headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
@@ -78,7 +78,7 @@ for i in range(20):
     print(r)
 
 payloadComment = {
-    'ISBN': '',
+    'ISBN_COMMENT': '',
     'bookComment': '',
     'userName': ''
 }
@@ -91,7 +91,7 @@ for i in range(20):
     bookComment = '' + chr(fChar) + chr(sChar)
     userName = '' + chr(fChar) + chr(sChar)
 
-    payloadComment['ISBN'] = ISBN
+    payloadComment['ISBN_COMMENT'] = ISBN
     payloadComment['bookComment'] = bookComment
     payloadComment['userName'] = userName
 
@@ -100,7 +100,7 @@ for i in range(20):
     print(r)
 
 payloadRatings = {
-    'ISBN': '',
+    'ISBN_RATING': '',
     'rating': '',
     'userName': ''
 }
@@ -113,7 +113,7 @@ for i in range(20):
     rating = i % 6
     userName = '' + chr(fChar) + chr(sChar)
 
-    payloadRatings['ISBN'] = ISBN
+    payloadRatings['ISBN_RATING'] = ISBN
     payloadRatings['rating'] = rating
     payloadRatings['userName'] = userName
     r = requests.post(urlCreateRatings, data=payloadRatings)
