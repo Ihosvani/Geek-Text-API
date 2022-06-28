@@ -1,3 +1,4 @@
+from unittest.util import _MAX_LENGTH
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
@@ -16,11 +17,9 @@ class Books(models.Model):
     def __str__(self):
         return self.ISBN
     
-    
-    
 class Comments(models.Model):
-    ISBN = models.CharField(primary_key=True, max_length=13)
-    bookComment = models.TextField()
+    ISBN = models.ForeignKey(Books, on_delete=models.CASCADE, null=True)
+    bookComment = models.CharField(max_length=10000)
     commentDate = models.DateField(auto_now_add=True, blank=True)
     userName = models.CharField(max_length=50)
 
@@ -28,7 +27,7 @@ class Comments(models.Model):
         return self.ISBN
 
 class Ratings(models.Model):
-    ISBN = models.CharField(primary_key=True, max_length=13)
+    ISBN = models.ForeignKey(Books, on_delete=models.CASCADE, null=True)
     rating = models.CharField(max_length=1)
     ratingDate = models.DateField(auto_now_add=True, blank=True)
     userName = models.CharField(max_length=50)

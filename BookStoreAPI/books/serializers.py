@@ -14,11 +14,11 @@ class AuthorsSerializers(serializers.ModelSerializer):
 class CommentsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Comments
-        fields = ('ISBN', 'bookComment', 'commentDate', 'userName')
+        fields = ('ISBN', 'bookComment', 'userName')
 
 class RatingsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Ratings
-        fields = ('ISBN', 'rating', 'ratingDate', 'userName')
+        fields = ('ISBN', 'rating', 'userName')
 
         

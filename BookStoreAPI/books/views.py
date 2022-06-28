@@ -37,6 +37,7 @@ def getAuthors(request):
     if request.method == 'POST':
         print(request.data)
         authors_serializer = AuthorsSerializers(data = request.data)
+        print(authors_serializer)
         if authors_serializer.is_valid():
             authors_serializer.save()
             return Response(authors_serializer.data, status = status.HTTP_201_CREATED)
@@ -75,20 +76,25 @@ def ge(request):
 def rateBook(request):
 
     if request.method == 'POST':
-        rating_data = JSONParser().parse(request)
-        rating_serializer = RatingsSerializers(data=rating_data)
+        print(request.data)
+        rating_serializer = RatingsSerializers(data=request.data)
+        print(rating_serializer)
 
         if rating_serializer.is_valid():
+            print('Rating added')
             rating_serializer.save()
-            return JsonResponse('Rating addes succesfully')
+            return Response('Rating addes succesfully')
 
 @api_view(['POST'])
 def commentBook(request):
     
     if request.method == 'POST':
-        comment_data = JSONParser().parse(request)
-        comment_serializer = CommentsSerializers(data=comment_data)
-
+        print(request.data)
+        comment_serializer = CommentsSerializers(data=request.data)
+        print(comment_serializer)
+        comment_serializer.is_valid()
+        print(comment_serializer.errors)
         if comment_serializer.is_valid():
+            print('Comment added')
             comment_serializer.save()
-            return JsonResponse('Rating addes succesfully')
+            return Response('Comment addes succesfully')
