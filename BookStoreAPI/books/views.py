@@ -61,15 +61,16 @@ def createAuthor(request):
    
 @api_view(['GET'])     
 def booksByAuthor(request, author):
+    
     try:
-        books = Books.objects.all()
+        books = Books.objects.all().filter(bookAuthor = author)
     except Books.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
     
     if request.method == 'GET':
-        books_serializer = BooksSerializers(books)
-        return Response(books_serializer.data)
+        books_serializer = BooksSerializers(books, many = True)
+        return JsonResponse(books_serializer.data, safe = False)
 
 @api_view(['GET'])
 def getRateBook(request):
