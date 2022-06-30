@@ -21,6 +21,7 @@ def getBooks(request):
         books = Books.objects.all()
         books_serializer = BooksSerializers(books, many = True)
         return JsonResponse(books_serializer.data, safe= False)
+
         
 @api_view(['POST'])
 def createBook(request):
@@ -40,6 +41,17 @@ def bookISBN(request, ISBN):
     if request.method == 'GET':
         books_serializer = BooksSerializers(book)
         return Response(books_serializer.data)
+
+@api_view(['GET'])     
+def getBookGenre(request, genre):
+    try:
+        book = Books.objects.all().filter(bookGenre = genre)
+    except Books.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        books_serializer = BooksSerializers(book , many = True)
+        return JsonResponse(books_serializer.data, safe= False)
         
     
 @api_view(['GET'])
@@ -60,6 +72,7 @@ def createAuthor(request):
             return Response(authors_serializer.data, status = status.HTTP_201_CREATED)
    
 @api_view(['GET'])     
+# not finished
 def booksByAuthor(request, author):
     try:
         books = Books.objects.all()
