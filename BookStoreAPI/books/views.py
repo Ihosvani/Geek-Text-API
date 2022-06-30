@@ -72,7 +72,6 @@ def createAuthor(request):
             return Response(authors_serializer.data, status = status.HTTP_201_CREATED)
    
 @api_view(['GET'])     
-# not finished
 def booksByAuthor(request, author):
     
     try:
