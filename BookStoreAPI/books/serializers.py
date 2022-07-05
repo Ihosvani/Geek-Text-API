@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Books, Authors, Comments, Ratings
+from .models import Books, Authors, Comments, Ratings, Profile, Payment
 
 class BooksSerializers(serializers.ModelSerializer):
     class Meta:
@@ -20,5 +20,15 @@ class RatingsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Ratings
         fields = ('ISBN_RATING', 'rating', 'userName')
+
+class ProfileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model: Profile
+        fields = ('profileID', 'username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
+
+class PaymentSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ('username_creditCard', 'bankName', 'creditCard')
 
         

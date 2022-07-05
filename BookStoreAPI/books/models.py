@@ -1,6 +1,9 @@
+import re
+import string
 from django.db import models
 
 # Create your models here.
+
 class Books(models.Model):
     ISBN = models.CharField(primary_key=True, max_length=13)
     bookTitle = models.CharField(max_length=500)
@@ -43,3 +46,22 @@ class Authors(models.Model):
     def __str__(self):
         return self.authorFirstName + ' ' + self.authorLastName
     
+class Profile(models.Model):
+    profileID = models.AutoField(primary_key=True, default="")
+    username = models.EmailField(max_length=100, unique=True, blank=False)
+    password = models.CharField(max_length=20, blank=False)
+    firstName = models.CharField(max_length=100, blank=False)
+    lastName = models.CharField(max_length=100, blank=False)
+    email = models.EmailField(max_length=100, blank=False)
+    homeAddress = models.CharField(max_length=500, blank=False)
+
+def __str__(self):
+    return self.username
+
+class Payment(models.Model):
+    username_creditCard = models.ManyToManyField(Profile)
+    bankName = models.CharField(max_length=100, blank=False)
+    creditCard = models.CharField(max_length=16, unique=True, blank=False)
+
+def __str__(self):
+    return self.bankName + ' ending in ' + self.creditCard[-4:]
