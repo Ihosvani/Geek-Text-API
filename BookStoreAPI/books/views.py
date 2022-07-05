@@ -100,7 +100,7 @@ def rateBook(request):
         if rating_serializer.is_valid():
             print('Rating added')
             rating_serializer.save()
-            return Response('Rating addes succesfully')
+            return Response('Rating added succesfully')
 
 @api_view(['POST'])
 def commentBook(request):
@@ -114,4 +114,4 @@ def commentBook(request):
         if comment_serializer.is_valid():
             print('Comment added')
             comment_serializer.save()
-            return Response('Comment addes succesfully')
+            return Response('Comment added succesfully')
