@@ -23,7 +23,7 @@ class RatingsSerializers(serializers.ModelSerializer):
 
 class ProfileSerializers(serializers.ModelSerializer):
     class Meta:
-        model: Profile
+        model = Profile
         fields = ('id', 'username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
 
 class PaymentSerializers(serializers.ModelSerializer):
