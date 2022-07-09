@@ -47,7 +47,7 @@ class Authors(models.Model):
         return self.authorFirstName + ' ' + self.authorLastName
     
 class Profile(models.Model):
-    profileID = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     username = models.EmailField(max_length=100, unique=True, blank=False)
     password = models.CharField(max_length=20, blank=False)
     firstName = models.CharField(max_length=100, blank=False)
