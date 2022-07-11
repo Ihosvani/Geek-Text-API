@@ -1,3 +1,4 @@
+from dataclasses import field
 import imp
 from pickle import FRAME
 from xmlrpc.client import ResponseError
@@ -72,46 +73,53 @@ def booksByAuthor(request, author):
         return Response(books_serializer.data)
 
 @api_view(['GET'])
-def getRateBook(request):
+def getAverageRating(request, ISBN):
 
-    if request.method == 'GET':
-        book_ISBN = JSONParser().parse(request)
-        ratings_book = Ratings.objects.all().filter(ISBN = book_ISBN['ISBN'])
-        rating_serializer = RatingsSerializers(data=ratings_book, many=True)
-        return JsonResponse(JSONParser().parse(rating_serializer))
-
-@api_view(['GET'])
-def ge(request):
-
-    if request.method == 'GET':
-        book_ISBN = JSONParser().parse(request)
-        ratings_book = Ratings.objects.filter(ISBN = book_ISBN)
-        rating_serializer = RatingsSerializers(data=ratings_book)
-        return JsonResponse(JSONParser().parse(rating_serializer))
+    ratings = Ratings.objects.filter(ISBN_RATINGS = ISBN)
+    rating_serializer = RatingsSerializers(data=ratings, fields='rating')
+    counter = 0
+    ratingTotal = 0
+    for rating in rating_serializer:
+        counter+= 1
+        ratingTotal += int(rating.get('rating'))
+    return Response(ratingTotal/float(counter))
 
 @api_view(['POST'])
 def rateBook(request):
 
-    if request.method == 'POST':
-        print(request.data)
-        rating_serializer = RatingsSerializers(data=request.data)
-        print(rating_serializer)
-
-        if rating_serializer.is_valid():
-            print('Rating added')
-            rating_serializer.save()
-            return Response('Rating added succesfully')
+    # print(request.data)
+    rating_serializer = RatingsSerializers(data=request.data)
+    # print(rating_serializer)
+    rating_serializer.is_valid()
+    print(rating_serializer.errors)
+    if rating_serializer.is_valid():
+        print('Rating added')
+        rating_serializer.save()
+        return Response('Rating added succesfully')
 
 @api_view(['POST'])
 def commentBook(request):
     
-    if request.method == 'POST':
-        print(request.data)
-        comment_serializer = CommentsSerializers(data=request.data)
-        print(comment_serializer)
-        comment_serializer.is_valid()
-        print(comment_serializer.errors)
-        if comment_serializer.is_valid():
-            print('Comment added')
-            comment_serializer.save()
-            return Response('Comment added succesfully')
+    # print(request.data)
+    comment_serializer = CommentsSerializers(data=request.data)
+    # print(comment_serializer)
+    comment_serializer.is_valid()
+    print(comment_serializer.errors)
+    if comment_serializer.is_valid():
+        print('Comment added')
+        comment_serializer.save()
+        return Response('Comment added succesfully')
+
+@api_view(['Get'])
+def getCommentsAndRatings(request, ISBN):
+    
+    print(request.data)
+    comments = Comments.objects.all().filter(ISBN_COMMENTS = ISBN).order_by('commentDate')
+    ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('rating')
+    comments_serializer = CommentsSerializers(comments)
+    rating_serializer = RatingsSerializers(ratings)
+
+    if(comments_serializer.is_valid() and rating_serializer.is_valid()):
+        return Response(comments_serializer.data, rating_serializer.data)
+
+

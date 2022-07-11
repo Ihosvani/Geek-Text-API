@@ -6,6 +6,11 @@ class BooksSerializers(serializers.ModelSerializer):
         model = Books
         fields = ('ISBN', 'bookTitle', 'bookDescription', 'bookPrice', 'bookAuthor', 'bookGenre', 'publisher', 'publishYear', 'bookCopiesSold')
         
+class ProfileSerializers(serializers.ModelSerializer):
+    class Meta:
+        model: Profile
+        fields = ('profileID', 'username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
+        
 class AuthorsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Authors
@@ -14,17 +19,12 @@ class AuthorsSerializers(serializers.ModelSerializer):
 class CommentsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Comments
-        fields = ('ISBN_COMMENT', 'bookComment', 'userName')
+        fields = ('ISBN_COMMENT', 'bookComment', 'userId')
 
 class RatingsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Ratings
-        fields = ('ISBN_RATING', 'rating', 'userName')
-
-class ProfileSerializers(serializers.ModelSerializer):
-    class Meta:
-        model: Profile
-        fields = ('profileID', 'username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
+        fields = ('ISBN_RATING', 'rating', 'userId')
 
 class PaymentSerializers(serializers.ModelSerializer):
     class Meta:
