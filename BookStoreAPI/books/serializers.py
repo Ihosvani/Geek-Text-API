@@ -24,11 +24,9 @@ class RatingsSerializers(serializers.ModelSerializer):
 class ProfileSerializers(serializers.ModelSerializer):
     class Meta:
         model: Profile
-        fields = ('profileID', 'username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
+        fields = ('username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
 
 class PaymentSerializers(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ('username_creditCard', 'bankName', 'creditCard')
-
-        

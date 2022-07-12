@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import JsonResponse
 
-from .models import Books, Authors, Comments, Ratings
-from .serializers import BooksSerializers, AuthorsSerializers, CommentsSerializers, RatingsSerializers
+from .models import Books, Authors, Comments, Payment, Profile, Ratings
+from .serializers import BooksSerializers, AuthorsSerializers, CommentsSerializers, RatingsSerializers, ProfileSerializers, PaymentSerializers
 
 # Create your views here.
 def welcomePage(request):
@@ -115,3 +115,44 @@ def commentBook(request):
             print('Comment added')
             comment_serializer.save()
             return Response('Comment added succesfully')
+
+@api_view(['POST'])
+def createProfile(request):
+    if request.method == 'POST':
+        print(request.data)
+        profile_serializer = ProfileSerializers(data=request.data)
+        print(profile_serializer)
+        if profile_serializer.isvalid():
+            print('Profile has been made for this user')
+            profile_serializer.save()
+            return Response('Profile created successfully')
+
+@api_view(['GET'])     
+def getProfile(request, username):
+    try:
+        profile = Profile.objects.get(pk=username)
+    except Profile.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        profile_serializer = ProfileSerializers(profile)
+        return Response(profile_serializer.data)
+
+@api_view(['POST'])
+def createPayment(request):
+    if request.method == 'POST':
+        print(request.data)
+        payment_serializer = PaymentSerializers(data=request.data)
+        print(payment_serializer)
+        if payment_serializer.isvalid():
+            print('Payment method has been added to this user')
+            payment_serializer.save()
+            return Response('Payment created successfully')
+
+@api_view(['GET'])
+def paymentByUser(request):
+    if request.method == 'GET':
+        profile_username = JSONParser().parse(request)
+        payment_profile = Payment.objects.filter(username_creditCard = profile_username)
+        payment_serializer = PaymentSerializers(data=payment_profile)
+        return JsonResponse(JSONParser().parse(payment_serializer))
