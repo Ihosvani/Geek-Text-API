@@ -4,6 +4,8 @@ from random import randint
 NUMBER_OF_ENTRIES = 1000
 
 
+urlCreateProfile = 'http://localhost:8000/admin/profile'
+urlCreatePayment = 'http://localhost:8000/admin/profile/payment'
 urlCreateBooks = 'http://localhost:8000/admin/books/'
 urlCreateAuthors = 'http://localhost:8000/admin/authors/'
 urlCreateComment = 'http://localhost:8000/books/commentBook'
@@ -119,3 +121,34 @@ for i in range(20):
     r = requests.post(urlCreateRatings, data=payloadRatings)
     print('Rating: ' + str(i) + ' response: ')
     print(r)
+
+    payloadProfile = {
+        'username': '',
+        'password': '',
+        'firstName': '',
+        'lastName': '',
+        'email': '',
+        'homeAddress': ''
+    }
+
+    for i in range(20):
+
+        fChar = ord('a') + int(i/26)
+        sChar = ord('a') + i%26
+        username = '' + chr(fChar) + chr(sChar)
+        password = '' + chr(fChar) + chr(sChar)
+        firstName = '' + chr(fChar) + chr(sChar) 
+        lastName = '' + chr(fChar) + chr(sChar)
+        email = '' + chr(fChar) + chr(sChar)
+        homeAddress = '' + chr(fChar) + chr(sChar) 
+
+        payloadProfile['username'] = username
+        payloadProfile['password'] = password
+        payloadProfile['firstName'] = firstName
+        payloadProfile['lastName'] = lastName
+        payloadProfile['email'] = email
+        payloadProfile['homeAddress'] = homeAddress
+
+        r = requests.post(urlCreateProfile, data=payloadProfile)
+        print('Author: ' + str(i) + ' response: ')
+        print(r)

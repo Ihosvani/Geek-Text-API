@@ -1,5 +1,4 @@
 """bookstore URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
@@ -19,6 +18,10 @@ from books import views
 
 urlpatterns = [
     path('', views.welcomePage),
+    path('admin/profile', views.createProfile),
+    path('profile/', views.getProfile),
+    path('admin/profile/payment', views.createPayment),
+    path('profile/payment/<str:username>', views.paymentByUser),
     path('books/', views.getBooks),
     path('admin/books/', views.createBook),
     path('books/<int:ISBN>', views.bookISBN ),
