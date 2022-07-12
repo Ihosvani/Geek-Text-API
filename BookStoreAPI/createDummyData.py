@@ -122,33 +122,55 @@ for i in range(20):
     print('Rating: ' + str(i) + ' response: ')
     print(r)
 
-    payloadProfile = {
-        'username': '',
-        'password': '',
-        'firstName': '',
-        'lastName': '',
-        'email': '',
-        'homeAddress': ''
+payloadProfile = {
+    'username': '',
+    'password': '',
+    'firstName': '',
+    'lastName': '',
+    'email': '',
+    'homeAddress': ''
+}
+
+for i in range(20):
+
+    fChar = ord('a') + int(i/26)
+    sChar = ord('a') + i%26
+    username = '' + chr(fChar) + chr(sChar)
+    password = '' + chr(fChar) + chr(sChar)
+    firstName = '' + chr(fChar) + chr(sChar) 
+    lastName = '' + chr(fChar) + chr(sChar)
+    email = '' + chr(fChar) + chr(sChar)
+    homeAddress = '' + chr(fChar) + chr(sChar) 
+
+    payloadProfile['username'] = username
+    payloadProfile['password'] = password
+    payloadProfile['firstName'] = firstName
+    payloadProfile['lastName'] = lastName
+    payloadProfile['email'] = email
+    payloadProfile['homeAddress'] = homeAddress
+
+    r = requests.post(urlCreateProfile, data=payloadProfile)
+    print('Profile Details: ' + str(i) + ' response: ')
+    print(r)
+
+payLoadPayment = {
+        'username_creditCard': '',
+        'bankName': '',
+        'creditCard': ''
     }
 
-    for i in range(20):
+for i in range(20):
 
-        fChar = ord('a') + int(i/26)
-        sChar = ord('a') + i%26
-        username = '' + chr(fChar) + chr(sChar)
-        password = '' + chr(fChar) + chr(sChar)
-        firstName = '' + chr(fChar) + chr(sChar) 
-        lastName = '' + chr(fChar) + chr(sChar)
-        email = '' + chr(fChar) + chr(sChar)
-        homeAddress = '' + chr(fChar) + chr(sChar) 
+    fChar = ord('a') + int(i/26)
+    sChar = ord('a') + i%26
+    username_creditCard = '' + chr(fChar) + chr(sChar)
+    bankName = '' + chr(fChar) + chr(sChar)
+    creditCard = '' + chr(fChar) + chr(sChar)
 
-        payloadProfile['username'] = username
-        payloadProfile['password'] = password
-        payloadProfile['firstName'] = firstName
-        payloadProfile['lastName'] = lastName
-        payloadProfile['email'] = email
-        payloadProfile['homeAddress'] = homeAddress
+    payloadProfile['username_creditCard'] = username_creditCard
+    payloadProfile['bankName'] = bankName
+    payloadProfile['creditCard'] = creditCard
 
-        r = requests.post(urlCreateProfile, data=payloadProfile)
-        print('Author: ' + str(i) + ' response: ')
-        print(r)
+    r = requests.post(urlCreatePayment, data=payLoadPayment)
+    print('Payment Details: ' + str(i) + ' response: ')
+    print(r)
