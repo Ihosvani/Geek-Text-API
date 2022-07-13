@@ -58,7 +58,7 @@ def __str__(self):
     return self.username
 
 class Payment(models.Model):
-    username_creditCard = models.ManyToManyField(Profile)
+    username_creditCard = models.ForeignKey(Profile, on_delete=models.CASCADE, default="a")
     bankName = models.CharField(max_length=100, blank=False)
     creditCard = models.CharField(max_length=16, unique=True, blank=False)
 

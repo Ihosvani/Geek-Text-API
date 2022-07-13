@@ -19,7 +19,7 @@ from books import views
 urlpatterns = [
     path('', views.welcomePage),
     path('admin/profile', views.createProfile),
-    path('profile/', views.getProfile),
+    path('profile/<str:username>', views.getProfile),
     path('admin/profile/payment', views.createPayment),
     path('admin/profile/payment/<str:username>', views.paymentByUser),
     path('books/', views.getBooks),
