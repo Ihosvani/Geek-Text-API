@@ -126,7 +126,7 @@ def createProfile(request):
         if profile_serializer.is_valid():
             print('Profile has been made for this user')
             profile_serializer.save()
-            return Response(profile_serializer.data)
+            return Response(profile_serializer.data, status = status.HTTP_201_CREATED)
 
 @api_view(['GET'])     
 def getProfile(request, username):
@@ -150,15 +150,11 @@ def createPayment(request):
         if payment_serializer.is_valid():
             print('Payment method has been added to this user')
             payment_serializer.save()
-            return Response(payment_serializer.data)
+            return Response(payment_serializer.data, status = status.HTTP_201_CREATED)
 
-@api_view(['GET'])     
-def paymentByUser(request, username):
-    try:
-        profile = Profile.objects.get(pk=username)
-    except Profile.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
-    
+@api_view(['GET'])
+def paymentByUser(request):
     if request.method == 'GET':
-        profile_serializer = ProfileSerializers(profile)
-        return Response(profile_serializer.data)
+        payment = Payment.objects.all()
+        payment_serializer = PaymentSerializers(payment, many = True)
+        return JsonResponse(payment_serializer.data, safe= False)
