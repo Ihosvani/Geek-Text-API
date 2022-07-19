@@ -20,6 +20,7 @@ urlpatterns = [
     path('', views.welcomePage),
     path('admin/profile', views.createProfile),
     path('profile/<str:username>', views.getProfile),
+    path('profile/update/<str:username>', views.updateProfile),
     path('admin/profile/payment', views.createPayment),
     path('payment/<str:username>', views.paymentByUser),
     path('books/', views.getBooks),

@@ -152,21 +152,29 @@ def createPayment(request):
             payment_serializer.save()
             return Response(payment_serializer.data, status = status.HTTP_201_CREATED)
 
-@api_view(['GET'])
-def paymentByUser(request, username):
-    if request.method == 'GET':
-        user_payment = JSONParser().parse(request)
-        payment = Payment.objects.filter(username = user_payment)
-        payment_serializer = PaymentSerializers(payment, many = True)
-        return JsonResponse(payment_serializer.data, safe= False)
-
 @api_view(['GET'])     
 def paymentByUser(request, username):
     try:
-        payment = Payment.objects.get(username_creditCard=username)
+        payment = Payment.objects.filter(username_creditCard=username)
     except Payment.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        payment_serializer = PaymentSerializers(payment)
+        payment_serializer = PaymentSerializers(payment, many=True)
         return Response(payment_serializer.data)
+
+@api_view(['PUT'])
+def updateProfile(request, username):
+    try:
+        profile = Profile.objects.get(pk=username)
+    except Profile.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+         profile_details = JSONParser().parse(request)
+         profile_serializer = ProfileSerializers(profile, data=profile_details)
+         
+         if profile_serializer.is_valid():
+            profile_serializer.save()
+            return JsonResponse(profile_serializer.data)
+    return JsonResponse(profile_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
