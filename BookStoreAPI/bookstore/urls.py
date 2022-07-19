@@ -21,7 +21,7 @@ urlpatterns = [
     path('admin/profile', views.createProfile),
     path('profile/<str:username>', views.getProfile),
     path('admin/profile/payment', views.createPayment),
-    path('profile/payment/<str:username>', views.paymentByUser),
+    path('payment/<str:username>', views.paymentByUser),
     path('books/', views.getBooks),
     path('admin/books/', views.createBook),
     path('books/<int:ISBN>', views.bookISBN ),

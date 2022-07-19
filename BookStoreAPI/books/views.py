@@ -153,8 +153,20 @@ def createPayment(request):
             return Response(payment_serializer.data, status = status.HTTP_201_CREATED)
 
 @api_view(['GET'])
-def paymentByUser(request):
+def paymentByUser(request, username):
     if request.method == 'GET':
-        payment = Payment.objects.all()
+        user_payment = JSONParser().parse(request)
+        payment = Payment.objects.filter(username = user_payment)
         payment_serializer = PaymentSerializers(payment, many = True)
         return JsonResponse(payment_serializer.data, safe= False)
+
+@api_view(['GET'])     
+def paymentByUser(request, username):
+    try:
+        payment = Payment.objects.get(username_creditCard=username)
+    except Payment.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        payment_serializer = PaymentSerializers(payment)
+        return Response(payment_serializer.data)
