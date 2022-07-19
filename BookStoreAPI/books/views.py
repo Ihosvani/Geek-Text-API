@@ -163,10 +163,10 @@ def paymentByUser(request, username):
 @api_view(['GET'])     
 def paymentByUser(request, username):
     try:
-        payment = Payment.objects.get(username_creditCard=username)
+        payment = Payment.objects.filter(username_creditCard=username)
     except Payment.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        payment_serializer = PaymentSerializers(payment)
+        payment_serializer = PaymentSerializers(payment, many=True)
         return Response(payment_serializer.data)
