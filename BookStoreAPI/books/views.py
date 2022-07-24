@@ -1,5 +1,7 @@
 from dataclasses import field
+from email import message
 import imp
+from os import stat
 from pickle import FRAME
 from xmlrpc.client import ResponseError
 from rest_framework.decorators import api_view
@@ -67,69 +69,75 @@ def booksByAuthor(request, author):
     except Books.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
     
-    
     if request.method == 'GET':
         books_serializer = BooksSerializers(books)
         return Response(books_serializer.data)
 
-@api_view(['GET'])
-def getAverageRating(request, ISBN):
-
-    ratings = Ratings.objects.filter(ISBN_RATINGS = ISBN)
-    rating_serializer = RatingsSerializers(data=ratings, fields='rating')
-    counter = 0
-    ratingTotal = 0
-    for rating in rating_serializer:
-        counter+= 1
-        ratingTotal += int(rating.get('rating'))
-    return Response(ratingTotal/float(counter))
-
 @api_view(['POST'])
 def rateBook(request):
 
-    # print(request.data)
+    if(request.data['rating'] > 5 or request.data['rating'] < 0):
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='Rating must be between 0 and 5 inclusive')
+    
     rating_serializer = RatingsSerializers(data=request.data)
-    # print(rating_serializer)
-    rating_serializer.is_valid()
-    print(rating_serializer.errors)
     if rating_serializer.is_valid():
-        print('Rating added')
         rating_serializer.save()
-        return Response('Rating added succesfully')
+        return Response(rating_serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND, data=rating_serializer.errors)
 
 @api_view(['POST'])
 def commentBook(request):
     
-    # print(request.data)
     comment_serializer = CommentsSerializers(data=request.data)
-    # print(comment_serializer)
-    comment_serializer.is_valid()
-    print(comment_serializer.errors)
     if comment_serializer.is_valid():
-        print('Comment added')
         comment_serializer.save()
-        return Response('Comment added succesfully')
+        return Response(comment_serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND, data=comment_serializer.errors)
+
+@api_view(['GET'])
+def getAverageRating(request, ISBN):
+
+    ratings = Ratings.objects.all().filter(ISBN_RATING=ISBN)
+    try:
+        Books.objects.get(pk=ISBN)
+    except Books.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not exist')
+    if(ratings.count() == 0):
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not have any ratings')
+    rating_serializer = RatingsSerializers(ratings, many=True)
+    counter = 0
+    ratingTotal = 0
+    for rating in rating_serializer.data:
+        counter+= 1
+        ratingTotal += int(rating['rating'])
+    return Response(ratingTotal/float(counter))
 
 @api_view(['Get'])
 def getCommentsAndRatings(request, ISBN):
     
-    print(request.data)
-    comments = Comments.objects.all().filter(ISBN_COMMENTS = ISBN).order_by('commentDate')
+    comments = Comments.objects.all().filter(ISBN_COMMENT = ISBN)
     ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('rating')
-    comments_serializer = CommentsSerializers(comments)
-    rating_serializer = RatingsSerializers(ratings)
 
-    if(comments_serializer.is_valid() and rating_serializer.is_valid()):
-        return Response(comments_serializer.data, rating_serializer.data)
+    try:
+        Books.objects.get(pk=ISBN)
+    except Books.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not exist')
+    if(ratings.count() == 0 and comments.count() == 0):
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not have any ratings or comments')
+
+    comments_serializer = CommentsSerializers(comments, many=True)
+    rating_serializer = RatingsSerializers(ratings, many=True)
+
+    return Response([comments_serializer.data, rating_serializer.data])
 
 @api_view(['POST'])
 def createProfile(request):
     if request.method == 'POST':
-        print(request.data)
+
         profile_serializer = ProfileSerializers(data=request.data)
-        print(profile_serializer)
-        if profile_serializer.isvalid():
-            print('Profile has been made for this user')
+        if profile_serializer.is_valid():
             profile_serializer.save()
             return Response('Profile created successfully')
 

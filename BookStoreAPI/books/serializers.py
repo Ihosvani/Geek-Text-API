@@ -8,7 +8,7 @@ class BooksSerializers(serializers.ModelSerializer):
         
 class ProfileSerializers(serializers.ModelSerializer):
     class Meta:
-        model: Profile
+        model = Profile
         fields = ('username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
         
 class AuthorsSerializers(serializers.ModelSerializer):
@@ -19,12 +19,12 @@ class AuthorsSerializers(serializers.ModelSerializer):
 class CommentsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Comments
-        fields = ('ISBN_COMMENT', 'bookComment', 'userId')
+        fields = ('ISBN_COMMENT', 'bookComment', 'userName', 'commentDate')
 
 class RatingsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Ratings
-        fields = ('ISBN_RATING', 'rating', 'userId')
+        fields = ('ISBN_RATING', 'rating', 'userName', 'ratingDate')
 
 class PaymentSerializers(serializers.ModelSerializer):
     class Meta:
