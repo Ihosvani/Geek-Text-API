@@ -65,12 +65,12 @@ def createAuthor(request):
 @api_view(['GET'])     
 def booksByAuthor(request, author):
     try:
-        books = Books.objects.all()
+        books = Books.objects.all().filter(bookAuthor=author)
     except Books.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        books_serializer = BooksSerializers(books)
+        books_serializer = BooksSerializers(books, many=True)
         return Response(books_serializer.data)
 
 @api_view(['POST'])
@@ -78,7 +78,7 @@ def rateBook(request):
 
     if(request.data['rating'] > 5 or request.data['rating'] < 0):
         return Response(status=status.HTTP_400_BAD_REQUEST, data='Rating must be between 0 and 5 inclusive')
-    
+
     rating_serializer = RatingsSerializers(data=request.data)
     if rating_serializer.is_valid():
         rating_serializer.save()
