@@ -52,6 +52,20 @@ def getBookGenre(request, genre):
     if request.method == 'GET':
         books_serializer = BooksSerializers(book , many = True)
         return JsonResponse(books_serializer.data, safe= False)
+
+
+@api_view(['GET'])
+def getTopTenBooks(request):
+    try:
+        book = Books.objects.all().order_by('bookCopiesSold')[:10]
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        books_serializer = BooksSerializers(book , many = True)
+        return JsonResponse(books_serializer.data, safe= False)
+    
+
         
     
 @api_view(['GET'])
