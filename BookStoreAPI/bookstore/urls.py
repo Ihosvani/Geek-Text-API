@@ -32,5 +32,7 @@ urlpatterns = [
     path('admin/authors/', views.createAuthor),
     path('authors/<str:author>', views.booksByAuthor),
     path('books/rateBook', views.rateBook),
-    path('books/commentBook', views.commentBook)
+    path('books/commentBook', views.commentBook),
+    path('books/commentsAndRatings/<int:ISBN>', views.getCommentsAndRatings),
+    path('books/averageRating/<int:ISBN>', views.getAverageRating)
 ]

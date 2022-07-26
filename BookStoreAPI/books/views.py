@@ -1,4 +1,7 @@
+from dataclasses import field
+from email import message
 import imp
+from os import stat
 from pickle import FRAME
 from xmlrpc.client import ResponseError
 from rest_framework.decorators import api_view
@@ -89,64 +92,77 @@ def createAuthor(request):
 # not finished
 def booksByAuthor(request, author):
     try:
-        books = Books.objects.all()
+        books = Books.objects.all().filter(bookAuthor=author)
     except Books.DoesNotExist:
-        return Response(status = status.HTTP_404_NOT_FOUND)
-    
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
     if request.method == 'GET':
-        books_serializer = BooksSerializers(books)
+        books_serializer = BooksSerializers(books, many=True)
         return Response(books_serializer.data)
-
-@api_view(['GET'])
-def getRateBook(request):
-
-    if request.method == 'GET':
-        book_ISBN = JSONParser().parse(request)
-        ratings_book = Ratings.objects.all().filter(ISBN = book_ISBN['ISBN'])
-        rating_serializer = RatingsSerializers(data=ratings_book, many=True)
-        return JsonResponse(JSONParser().parse(rating_serializer))
-
-@api_view(['GET'])
-def ge(request):
-
-    if request.method == 'GET':
-        book_ISBN = JSONParser().parse(request)
-        ratings_book = Ratings.objects.filter(ISBN = book_ISBN)
-        rating_serializer = RatingsSerializers(data=ratings_book)
-        return JsonResponse(JSONParser().parse(rating_serializer))
 
 @api_view(['POST'])
 def rateBook(request):
 
-    if request.method == 'POST':
-        print(request.data)
-        rating_serializer = RatingsSerializers(data=request.data)
-        print(rating_serializer)
+    if(request.data['rating'] > 5 or request.data['rating'] < 0):
+        return Response(status=status.HTTP_400_BAD_REQUEST, data='Rating must be between 0 and 5 inclusive')
 
-        if rating_serializer.is_valid():
-            print('Rating added')
-            rating_serializer.save()
-            return Response('Rating added succesfully')
+    rating_serializer = RatingsSerializers(data=request.data)
+    if rating_serializer.is_valid():
+        rating_serializer.save()
+        return Response(rating_serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND, data=rating_serializer.errors)
 
 @api_view(['POST'])
 def commentBook(request):
     
-    if request.method == 'POST':
-        print(request.data)
-        comment_serializer = CommentsSerializers(data=request.data)
-        print(comment_serializer)
-        comment_serializer.is_valid()
-        print(comment_serializer.errors)
-        if comment_serializer.is_valid():
-            print('Comment added')
-            comment_serializer.save()
-            return Response('Comment added succesfully')
+    comment_serializer = CommentsSerializers(data=request.data)
+    if comment_serializer.is_valid():
+        comment_serializer.save()
+        return Response(comment_serializer.data)
+    else:
+        return Response(status=status.HTTP_404_NOT_FOUND, data=comment_serializer.errors)
+
+@api_view(['GET'])
+def getAverageRating(request, ISBN):
+
+    ratings = Ratings.objects.all().filter(ISBN_RATING=ISBN)
+    try:
+        Books.objects.get(pk=ISBN)
+    except Books.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not exist')
+    if(ratings.count() == 0):
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not have any ratings')
+    rating_serializer = RatingsSerializers(ratings, many=True)
+    counter = 0
+    ratingTotal = 0
+    for rating in rating_serializer.data:
+        counter+= 1
+        ratingTotal += int(rating['rating'])
+    return Response(ratingTotal/float(counter))
+
+@api_view(['Get'])
+def getCommentsAndRatings(request, ISBN):
+    
+    comments = Comments.objects.all().filter(ISBN_COMMENT = ISBN)
+    ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('rating')
+
+    try:
+        Books.objects.get(pk=ISBN)
+    except Books.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not exist')
+    if(ratings.count() == 0 and comments.count() == 0):
+        return Response(status=status.HTTP_404_NOT_FOUND, data='Book with ISBN ' + str(ISBN) + ' does not have any ratings or comments')
+
+    comments_serializer = CommentsSerializers(comments, many=True)
+    rating_serializer = RatingsSerializers(ratings, many=True)
+
+    return Response([comments_serializer.data, rating_serializer.data])
 
 @api_view(['POST'])
 def createProfile(request):
     if request.method == 'POST':
-        print(request.data)
+
         profile_serializer = ProfileSerializers(data=request.data)
         print(profile_serializer.is_valid())
         print(profile_serializer.errors)
