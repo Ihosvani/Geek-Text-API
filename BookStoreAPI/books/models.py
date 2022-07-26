@@ -3,11 +3,11 @@ from django.db import models
 # Create your models here.
 
 class Profile(models.Model):
-    username = models.EmailField(primary_key=True, max_length=100, unique=True, blank=False, editable=False)
+    username = models.EmailField(primary_key=True, max_length=100, unique=True, blank=False)
     password = models.CharField(max_length=20, blank=False)
     firstName = models.CharField(max_length=100, blank=False)
     lastName = models.CharField(max_length=100, blank=False)
-    email = models.EmailField(max_length=100, blank=False, editable=False)
+    email = models.EmailField(max_length=100, unique=True, blank=False)
     homeAddress = models.CharField(max_length=500, blank=False)
 
     def __str__(self):
@@ -56,9 +56,9 @@ class Authors(models.Model):
         return self.authorFirstName + ' ' + self.authorLastName
 
 class Payment(models.Model):
-    username_creditCard = models.ManyToManyField(Profile)
+    username_creditCard = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None)
     bankName = models.CharField(max_length=100, blank=False)
-    creditCard = models.CharField(max_length=16, unique=True, blank=False)
+    creditCard = models.CharField(max_length=16, blank=False)
 
     def __str__(self):
         return self.bankName + ' ending in ' + self.creditCard[-4:]

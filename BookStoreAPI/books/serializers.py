@@ -10,6 +10,11 @@ class ProfileSerializers(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('username', 'password', 'firstName', 'lastName', 'email', 'homeAddress')
+
+        extra_kwargs = {
+            'username': {'read_only': True},
+            'email': {'read_only': True}
+        }
         
 class AuthorsSerializers(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +35,7 @@ class PaymentSerializers(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = ('username_creditCard', 'bankName', 'creditCard')
+
+        extra_kwargs = {
+            'username_creditCard': {'read_only': True}
+        }

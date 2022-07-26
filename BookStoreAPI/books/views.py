@@ -24,6 +24,7 @@ def getBooks(request):
         books = Books.objects.all()
         books_serializer = BooksSerializers(books, many = True)
         return JsonResponse(books_serializer.data, safe= False)
+
         
 @api_view(['POST'])
 def createBook(request):
@@ -43,6 +44,31 @@ def bookISBN(request, ISBN):
     if request.method == 'GET':
         books_serializer = BooksSerializers(book)
         return Response(books_serializer.data)
+
+@api_view(['GET'])     
+def getBookGenre(request, genre):
+    try:
+        book = Books.objects.all().filter(bookGenre = genre)
+    except Books.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        books_serializer = BooksSerializers(book , many = True)
+        return JsonResponse(books_serializer.data, safe= False)
+
+
+@api_view(['GET'])
+def getTopTenBooks(request):
+    try:
+        book = Books.objects.all().order_by('bookCopiesSold')[:10]
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        books_serializer = BooksSerializers(book , many = True)
+        return JsonResponse(books_serializer.data, safe= False)
+    
+
         
     
 @api_view(['GET'])
@@ -63,6 +89,7 @@ def createAuthor(request):
             return Response(authors_serializer.data, status = status.HTTP_201_CREATED)
    
 @api_view(['GET'])     
+# not finished
 def booksByAuthor(request, author):
     try:
         books = Books.objects.all().filter(bookAuthor=author)
@@ -137,9 +164,12 @@ def createProfile(request):
     if request.method == 'POST':
 
         profile_serializer = ProfileSerializers(data=request.data)
+        print(profile_serializer.is_valid())
+        print(profile_serializer.errors)
         if profile_serializer.is_valid():
+            print('Profile has been made for this user')
             profile_serializer.save()
-            return Response('Profile created successfully')
+            return Response(profile_serializer.data, status = status.HTTP_201_CREATED)
 
 @api_view(['GET'])     
 def getProfile(request, username):
@@ -158,15 +188,36 @@ def createPayment(request):
         print(request.data)
         payment_serializer = PaymentSerializers(data=request.data)
         print(payment_serializer)
-        if payment_serializer.isvalid():
+        payment_serializer.is_valid()
+        print(payment_serializer.errors)
+        if payment_serializer.is_valid():
             print('Payment method has been added to this user')
             payment_serializer.save()
-            return Response('Payment created successfully')
+            return Response(payment_serializer.data, status = status.HTTP_201_CREATED)
 
-@api_view(['GET'])
-def paymentByUser(request):
+@api_view(['GET'])     
+def paymentByUser(request, username):
+    try:
+        payment = Payment.objects.filter(username_creditCard=username)
+    except Payment.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
     if request.method == 'GET':
-        profile_username = JSONParser().parse(request)
-        payment_profile = Payment.objects.filter(username_creditCard = profile_username)
-        payment_serializer = PaymentSerializers(data=payment_profile)
-        return JsonResponse(JSONParser().parse(payment_serializer))
+        payment_serializer = PaymentSerializers(payment, many=True)
+        return Response(payment_serializer.data)
+
+@api_view(['PUT'])
+def updateProfile(request, username):
+    try:
+        profile = Profile.objects.get(pk=username)
+    except Profile.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+         profile_details = JSONParser().parse(request)
+         profile_serializer = ProfileSerializers(profile, data=profile_details)
+         
+         if profile_serializer.is_valid():
+            profile_serializer.save()
+            return JsonResponse(profile_serializer.data)
+    return JsonResponse(profile_serializer.errors, status = status.HTTP_400_BAD_REQUEST)
