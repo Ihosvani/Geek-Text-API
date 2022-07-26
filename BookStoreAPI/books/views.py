@@ -64,6 +64,29 @@ def getTopTenBooks(request):
     if request.method == 'GET':
         books_serializer = BooksSerializers(book , many = True)
         return JsonResponse(books_serializer.data, safe= False)
+
+@api_view(['GET'])
+def getBookRatingOrHigher(request, rating):
+    try:
+        books = Ratings.objects.all().filter(rating__gte = rating)
+    except:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        ratings_serializer = RatingsSerializers(books, many = True)
+        return JsonResponse(ratings_serializer.data, safe = False)
+        
+@api_view(['GET'])     
+def getXBooks(request, x):
+    try:
+        book = Books.objects.all()[:x]
+    except Books.DoesNotExist:
+        return Response(status = status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        books_serializer = BooksSerializers(book , many = True)
+        return JsonResponse(books_serializer.data, safe= False)
+
     
 
         
