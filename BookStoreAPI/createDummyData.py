@@ -6,8 +6,8 @@ NUMBER_OF_ENTRIES = 1000
 
 urlCreateBooks = 'http://localhost:8000/admin/books/'
 urlCreateAuthors = 'http://localhost:8000/admin/authors/'
-urlCreateComment = 'http://localhost:8000/books/commentBook'
-urlCreateRatings = 'http://localhost:8000/books/rateBook'
+urlCreateComment = 'http://localhost:8000/books/commentBook/'
+urlCreateRatings = 'http://localhost:8000/books/rateBook/'
 headers = {'content-type': 'application/json', 'Accept-Charset': 'UTF-8'}
 
 
