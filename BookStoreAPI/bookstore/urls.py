@@ -26,9 +26,13 @@ urlpatterns = [
     path('books/', views.getBooks),
     path('admin/books/', views.createBook),
     path('books/<int:ISBN>', views.bookISBN ),
+    path('books/mostSold',views.getTopTenBooks),
+    path('books/genre/<str:genre>', views.getBookGenre),
     path('authors/', views.getAuthors),
     path('admin/authors/', views.createAuthor),
     path('authors/<str:author>', views.booksByAuthor),
     path('books/rateBook', views.rateBook),
-    path('books/commentBook', views.commentBook)
+    path('books/commentBook', views.commentBook),
+    path('books/commentsAndRatings/<int:ISBN>', views.getCommentsAndRatings),
+    path('books/averageRating/<int:ISBN>', views.getAverageRating)
 ]

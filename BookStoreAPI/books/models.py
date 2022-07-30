@@ -1,8 +1,17 @@
-import re
-import string
 from django.db import models
 
 # Create your models here.
+
+class Profile(models.Model):
+    username = models.EmailField(primary_key=True, max_length=100, unique=False, blank=False)
+    password = models.CharField(max_length=20, blank=False)
+    firstName = models.CharField(max_length=100, blank=False)
+    lastName = models.CharField(max_length=100, blank=False)
+    email = models.EmailField(max_length=100, blank=False)
+    homeAddress = models.CharField(max_length=500, blank=False)
+
+    def __str__(self):
+        return self.username
 
 class Books(models.Model):
     ISBN = models.CharField(primary_key=True, max_length=13)
@@ -19,22 +28,22 @@ class Books(models.Model):
         return self.ISBN
     
 class Comments(models.Model):
-    ISBN_COMMENT= models.ManyToManyField(Books)
+    ISBN_COMMENT= models.ForeignKey(Books, on_delete=models.CASCADE)
     bookComment = models.CharField(max_length=10000)
     commentDate = models.DateField(auto_now_add=True, blank=True)
-    userName = models.CharField(max_length=50)
+    userName = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.ISBN
+        return self.ISBN_COMMENT
 
 class Ratings(models.Model):
-    ISBN_RATING = models.ManyToManyField(Books)
-    rating = models.CharField(max_length=1)
+    ISBN_RATING = models.ForeignKey(Books, on_delete=models.CASCADE)
+    rating = models.IntegerField(max_length=1)
     ratingDate = models.DateField(auto_now_add=True, blank=True)
-    userName = models.CharField(max_length=50)
+    userName = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.ISBN
+        return self.ISBN_RATING
 
 class Authors(models.Model):
     id = models.AutoField(primary_key=True)
@@ -45,22 +54,11 @@ class Authors(models.Model):
     
     def __str__(self):
         return self.authorFirstName + ' ' + self.authorLastName
-    
-class Profile(models.Model):
-    username = models.EmailField(primary_key=True, max_length=100, unique=True, blank=False)
-    password = models.CharField(max_length=20, blank=False)
-    firstName = models.CharField(max_length=100, blank=False)
-    lastName = models.CharField(max_length=100, blank=False)
-    email = models.EmailField(max_length=100, unique=True, blank=False)
-    homeAddress = models.CharField(max_length=500, blank=False)
-
-def __str__(self):
-    return self.username
 
 class Payment(models.Model):
     username_creditCard = models.ForeignKey(Profile, on_delete=models.CASCADE, default=None)
     bankName = models.CharField(max_length=100, blank=False)
     creditCard = models.CharField(max_length=16, blank=False)
 
-def __str__(self):
-    return self.bankName + ' ending in ' + self.creditCard[-4:]
+    def __str__(self):
+        return self.bankName + ' ending in ' + self.creditCard[-4:]

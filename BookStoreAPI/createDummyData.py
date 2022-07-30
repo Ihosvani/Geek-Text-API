@@ -1,8 +1,7 @@
 import requests
 from random import randint
 
-NUMBER_OF_ENTRIES = 1000
-
+ITERATIONS = 1
 
 urlCreateProfile = 'http://localhost:8000/admin/profile'
 urlCreatePayment = 'http://localhost:8000/admin/profile/payment'
@@ -26,7 +25,7 @@ payloadBook = {
     'bookCopiesSold': ''
 }
 
-for i in range(20):
+for i in range(ITERATIONS):
 
     fChar = ord('a') + int(i/26)
     sChar = ord('a') + i%26
@@ -61,7 +60,7 @@ payloadAuthors = {
     'publisher': ''
 }
 
-for i in range(20):
+for i in range(ITERATIONS):
 
     fChar = ord('a') + int(i/26)
     sChar = ord('a') + i%26
@@ -79,59 +78,16 @@ for i in range(20):
     print('Author: ' + str(i) + ' response: ')
     print(r)
 
-payloadComment = {
-    'ISBN_COMMENT': '',
-    'bookComment': '',
-    'userName': ''
-}
-
-for i in range(20):
-
-    fChar = ord('a') + int(i/26)
-    sChar = ord('a') + i%26
-    ISBN = 1000000000000 + i
-    bookComment = '' + chr(fChar) + chr(sChar)
-    userName = '' + chr(fChar) + chr(sChar)
-
-    payloadComment['ISBN_COMMENT'] = ISBN
-    payloadComment['bookComment'] = bookComment
-    payloadComment['userName'] = userName
-
-    r = requests.post(urlCreateComment, data=payloadComment)
-    print('Comment: ' + str(i) + ' response: ')
-    print(r)
-
-payloadRatings = {
-    'ISBN_RATING': '',
-    'rating': '',
-    'userName': ''
-}
-
-for i in range(20):
-
-    fChar = ord('a') + int(i/26)
-    sChar = ord('a') + i%26
-    ISBN = 1000000000000 + i
-    rating = i % 6
-    userName = '' + chr(fChar) + chr(sChar)
-
-    payloadRatings['ISBN_RATING'] = ISBN
-    payloadRatings['rating'] = rating
-    payloadRatings['userName'] = userName
-    r = requests.post(urlCreateRatings, data=payloadRatings)
-    print('Rating: ' + str(i) + ' response: ')
-    print(r)
-
 payloadProfile = {
-    'username': '',
-    'password': '',
-    'firstName': '',
-    'lastName': '',
-    'email': '',
-    'homeAddress': ''
+    "username" : "",
+    "password" : "",
+    "firstName" : "",
+    "lastName" : "",
+    "email" : "",
+    "homeAddress": ""
 }
 
-for i in range(20):
+for i in range(ITERATIONS):
 
     fChar = ord('a') + int(i/26)
     sChar = ord('a') + i%26
@@ -150,27 +106,49 @@ for i in range(20):
     payloadProfile['homeAddress'] = homeAddress
 
     r = requests.post(urlCreateProfile, data=payloadProfile)
-    print('Profile Details: ' + str(i) + ' response: ')
+    print('Profile: ' + str(i) + ' response: ')
     print(r)
 
-payLoadPayment = {
-        'username_creditCard': '',
-        'bankName': '',
-        'creditCard': ''
-    }
 
-for i in range(20):
+payloadComment = {
+    'ISBN_COMMENT': '',
+    'bookComment': '',
+    'userName': ''
+}
+
+for i in range(ITERATIONS):
 
     fChar = ord('a') + int(i/26)
     sChar = ord('a') + i%26
-    username_creditCard = '' + chr(fChar) + chr(sChar)
-    bankName = '' + chr(fChar) + chr(sChar)
-    creditCard = '' + chr(fChar) + chr(sChar)
+    ISBN = 1000000000000 + i
+    bookComment = '' + chr(fChar) + chr(sChar)
+    userName = fChar
 
-    payloadProfile['username_creditCard'] = username_creditCard
-    payloadProfile['bankName'] = bankName
-    payloadProfile['creditCard'] = creditCard
+    payloadComment['ISBN_COMMENT'] = ISBN
+    payloadComment['bookComment'] = bookComment
+    payloadComment['userName'] = userName
 
-    r = requests.post(urlCreatePayment, data=payLoadPayment)
-    print('Payment Details: ' + str(i) + ' response: ')
+    r = requests.post(urlCreateComment, data=payloadComment)
+    print('Comment: ' + str(i) + ' response: ')
+    print(r)
+
+payloadRatings = {
+    'ISBN_RATING': '',
+    'rating': '',
+    'userName': ''
+}
+
+for i in range(ITERATIONS):
+
+    fChar = ord('a') + int(i/26)
+    sChar = ord('a') + i%26
+    ISBN = 1000000000000 + i
+    rating = i % 6
+    userName = fChar
+
+    payloadRatings['ISBN_RATING'] = ISBN
+    payloadRatings['rating'] = rating
+    payloadRatings['userName'] = userName
+    r = requests.post(urlCreateRatings, data=payloadRatings)
+    print('Rating: ' + str(i) + ' response: ')
     print(r)
