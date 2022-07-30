@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import imp
 from pickle import FRAME
 from xmlrpc.client import ResponseError
@@ -79,6 +80,11 @@ def getBookRatingOrHigher(request, rating):
 @api_view(['GET'])     
 def getXBooks(request, x):
     try:
+        if(x > Books.objects.all().count()):
+            x = Books.objects.all().count()
+        if(x == 0):
+            x = 1
+        
         book = Books.objects.all()[:x]
     except Books.DoesNotExist:
         return Response(status = status.HTTP_404_NOT_FOUND)
@@ -156,12 +162,14 @@ def rateBook(request):
 def commentBook(request):
     
     if request.method == 'POST':
+        print("request.data is ")
         print(request.data)
         comment_serializer = CommentsSerializers(data=request.data)
-        print(comment_serializer)
-        comment_serializer.is_valid()
-        print(comment_serializer.errors)
+       
         if comment_serializer.is_valid():
+            print(comment_serializer.fields)
+            print(comment_serializer.validated_data)
+            print(comment_serializer.errors)
             print('Comment added')
             comment_serializer.save()
             return Response('Comment added successfully')
