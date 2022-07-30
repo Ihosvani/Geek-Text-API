@@ -28,19 +28,19 @@ class Books(models.Model):
         return self.ISBN
     
 class Comments(models.Model):
-    ISBN_COMMENT= models.ForeignKey(Books, on_delete=models.CASCADE, default="1000000000000")
+    ISBN_COMMENT= models.ForeignKey(Books, on_delete=models.CASCADE)
     bookComment = models.CharField(max_length=10000)
     commentDate = models.DateField(auto_now_add=True, blank=True)
-    userName = models.ForeignKey(Profile, on_delete=models.CASCADE, default="a")
+    userName = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.ISBN_COMMENT
 
 class Ratings(models.Model):
-    ISBN_RATING = models.ForeignKey(Books, on_delete=models.CASCADE, default="1000000000000")
+    ISBN_RATING = models.ForeignKey(Books, on_delete=models.CASCADE)
     rating = models.IntegerField(max_length=1)
     ratingDate = models.DateField(auto_now_add=True, blank=True)
-    userName = models.ForeignKey(Profile, on_delete=models.CASCADE, default="a")
+    userName = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.ISBN_RATING

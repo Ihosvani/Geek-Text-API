@@ -102,10 +102,12 @@ def booksByAuthor(request, author):
 @api_view(['POST'])
 def rateBook(request):
 
-    if(request.data['rating'] > 5 or request.data['rating'] < 0):
+    if(int(request.data['rating']) > 5 or int(request.data['rating']) < 0):
         return Response(status=status.HTTP_400_BAD_REQUEST, data='Rating must be between 0 and 5 inclusive')
 
     rating_serializer = RatingsSerializers(data=request.data)
+    rating_serializer.is_valid()
+    print(rating_serializer.errors)
     if rating_serializer.is_valid():
         rating_serializer.save()
         return Response(rating_serializer.data)
@@ -144,7 +146,7 @@ def getAverageRating(request, ISBN):
 def getCommentsAndRatings(request, ISBN):
     
     comments = Comments.objects.all().filter(ISBN_COMMENT = ISBN)
-    ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('rating')
+    ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('-rating')
 
     try:
         Books.objects.get(pk=ISBN)
