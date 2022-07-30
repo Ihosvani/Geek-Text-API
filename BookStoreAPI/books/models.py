@@ -3,11 +3,11 @@ from django.db import models
 # Create your models here.
 
 class Profile(models.Model):
-    username = models.EmailField(primary_key=True, max_length=100, unique=True, blank=False)
+    username = models.EmailField(primary_key=True, max_length=100, unique=False, blank=False)
     password = models.CharField(max_length=20, blank=False)
     firstName = models.CharField(max_length=100, blank=False)
     lastName = models.CharField(max_length=100, blank=False)
-    email = models.EmailField(max_length=100, unique=True, blank=False)
+    email = models.EmailField(max_length=100, blank=False)
     homeAddress = models.CharField(max_length=500, blank=False)
 
     def __str__(self):
