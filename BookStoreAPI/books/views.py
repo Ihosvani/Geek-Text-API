@@ -102,10 +102,12 @@ def booksByAuthor(request, author):
 @api_view(['POST'])
 def rateBook(request):
 
-    if(request.data['rating'] > 5 or request.data['rating'] < 0):
+    if(int(request.data['rating']) > 5 or int(request.data['rating']) < 0):
         return Response(status=status.HTTP_400_BAD_REQUEST, data='Rating must be between 0 and 5 inclusive')
 
     rating_serializer = RatingsSerializers(data=request.data)
+    rating_serializer.is_valid()
+    print(rating_serializer.errors)
     if rating_serializer.is_valid():
         rating_serializer.save()
         return Response(rating_serializer.data)
@@ -116,6 +118,8 @@ def rateBook(request):
 def commentBook(request):
     
     comment_serializer = CommentsSerializers(data=request.data)
+    comment_serializer.is_valid()
+    print(comment_serializer.errors)
     if comment_serializer.is_valid():
         comment_serializer.save()
         return Response(comment_serializer.data)
