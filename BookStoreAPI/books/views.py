@@ -82,8 +82,6 @@ def getXBooks(request, x):
     try:
         if(x > Books.objects.all().count()):
             x = Books.objects.all().count()
-        if(x == 0):
-            x = 1
         
         book = Books.objects.all()[:x]
     except Books.DoesNotExist:
