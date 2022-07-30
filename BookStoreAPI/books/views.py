@@ -118,8 +118,6 @@ def rateBook(request):
 def commentBook(request):
     
     comment_serializer = CommentsSerializers(data=request.data)
-    comment_serializer.is_valid()
-    print(comment_serializer.errors)
     if comment_serializer.is_valid():
         comment_serializer.save()
         return Response(comment_serializer.data)
