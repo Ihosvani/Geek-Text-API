@@ -148,7 +148,7 @@ def getAverageRating(request, ISBN):
 def getCommentsAndRatings(request, ISBN):
     
     comments = Comments.objects.all().filter(ISBN_COMMENT = ISBN)
-    ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('rating')
+    ratings = Ratings.objects.all().filter(ISBN_RATING = ISBN).order_by('-rating')
 
     try:
         Books.objects.get(pk=ISBN)
